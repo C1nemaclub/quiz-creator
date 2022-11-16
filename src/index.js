@@ -6,8 +6,6 @@ import { StateContext } from './context/StateContext';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <StateContext>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+    <App />
   </StateContext>
 );

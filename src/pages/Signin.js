@@ -3,17 +3,24 @@ import React, { useState, useEffect } from 'react';
 import { useStateContext } from '../context/StateContext.js';
 
 export default function Signin() {
-  const { createUser } = useStateContext();
+  const { createQuestionaire } = useStateContext();
   const [quiz, setQuiz] = useState({
     question: '',
-    category: 'Physics',
-    answers: [
-      {
-        option: 'Test option',
-        correct: false,
-      },
-    ],
+    category: '',
+    newAnswer: '',
+    newAnswerIsCorrect: false,
+    answers: [],
   });
+
+  function onChange(e) {
+    const { name, value } = e.target;
+    setQuiz((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  }
 
   function newAnswer() {
     setQuiz((prev) => {
@@ -22,8 +29,8 @@ export default function Signin() {
         answers: [
           ...prev.answers,
           {
-            option: 'Hola',
-            correct: false,
+            option: quiz.newAnswer,
+            correct: quiz.newAnswerIsCorrect,
           },
         ],
       };
@@ -50,42 +57,29 @@ export default function Signin() {
     },
   ]);
 
-  function onChange(e) {
-    const { name, value } = e.target;
-    console.log(name, value);
-    setQuiz((prev) => {
-      return {
+  function addNewQuestion() {
+    setQuestions((prev) => {
+      return [
         ...prev,
-        [name]: value,
-      };
+        {
+          question: quiz.question,
+          category: quiz.category,
+          answers: quiz.answers,
+        },
+      ];
+    });
+    setQuiz({
+      question: '',
+      category: '',
+      newAnswer: '',
+      newAnswerIsCorrect: false,
+      answers: [],
     });
   }
 
   function onSubmit(e) {
     e.preventDefault();
-    setQuestions((prev) => {
-      return [
-        ...prev,
-        {
-          question: 'Nueva pregunta',
-          category: 'test',
-          answers: [
-            {
-              option: 'option1',
-              correct: false,
-            },
-            {
-              option: 'option2',
-              correct: false,
-            },
-            {
-              option: 'option3',
-              correct: true,
-            },
-          ],
-        },
-      ];
-    });
+    createQuestionaire(questions);
   }
 
   const questionElements = questions.map((item, index) => {
@@ -100,8 +94,6 @@ export default function Signin() {
   });
 
   const currentAnswerElements = quiz.answers.map((item) => {
-    console.log(item);
-
     return <li key={item.option}>{item.option}</li>;
   });
   return (
@@ -118,23 +110,45 @@ export default function Signin() {
                   value={quiz.question}
                   onChange={onChange}
                   name='question'
+                  required
                 />
               </div>
               <div className='input-group'>
-                <label htmlFor=''></label>
-                <input type='text' value='1000KM' onChange={onChange} />
-                <select name='' id=''>
-                  <option value=''>True</option>
-                  <option value=''>False</option>
+                <label htmlFor=''>Category</label>
+                <select name='category' id='' onChange={onChange} required>
+                  <option value='none' hidden>
+                    Select a Category
+                  </option>
+                  <option value='Math'>Math</option>
+                  <option value='Physics'>Physics</option>
+                  <option value='Science'>Science</option>
+                </select>
+              </div>
+              <div className='input-group'>
+                <label htmlFor=''>New Answer</label>
+                <input
+                  type='text'
+                  value={quiz.newAnswer}
+                  onChange={onChange}
+                  name='newAnswer'
+                />
+                <select name='newAnswerIsCorrect' id='' onChange={onChange}>
+                  <option value='none' hidden>
+                    False or True
+                  </option>
+                  <option value={false}>False</option>
+                  <option value={true}>True</option>
                 </select>
                 <button type='button' onClick={newAnswer}>
-                  New Answer
+                  Add Answer
                 </button>
               </div>
               {currentAnswerElements}
-              <button>Add</button>
+              <button type='button' onClick={addNewQuestion}>
+                Add new Question
+              </button>
+              <button type='submit'>Submit</button>
             </div>
-
             <div className='step-two'>{questionElements}</div>
           </form>
         </div>
