@@ -1,23 +1,26 @@
-import logo from './logo.svg';
+import { useStateContext } from './context/StateContext';
+import React, { useEffect, useState } from 'react';
+import Header from './components/Header.js';
+import Home from './pages/Home.js';
+import Signin from './pages/Signin.js';
+import Quizes from './pages/Quizes.js';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 import './App.css';
 
 function App() {
+  const { users, createUser, editUser, deleteUser } = useStateContext();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/sign-in' element={<Signin />} />
+          <Route path='/quizes' element={<Quizes />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
