@@ -2,11 +2,11 @@ import { useStateContext } from './context/StateContext';
 import React, { useEffect, useState } from 'react';
 import Header from './components/Header.js';
 import Home from './pages/Home.js';
-import Signin from './pages/Signin.js';
 import Quizes from './pages/Quizes.js';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 
-import './App.css';
+import './styles/GlobalStyles.scss';
 
 function App() {
   const { users, createUser, editUser, deleteUser } = useStateContext();
@@ -15,9 +15,9 @@ function App() {
     <div className='App'>
       <Router>
         <Header />
+        <Toaster />
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/sign-in' element={<Signin />} />
           <Route path='/quizes' element={<Quizes />} />
         </Routes>
       </Router>

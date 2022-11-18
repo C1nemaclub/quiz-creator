@@ -1,17 +1,24 @@
 import React from 'react';
 import { useStateContext } from '../context/StateContext.js';
+import { toast } from 'react-hot-toast';
+import Card from '../components/Card.js';
+import '../styles/Home.scss';
 
 export default function Home() {
-  const { users, isLoading } = useStateContext();
+  const { questionaires, isLoading } = useStateContext();
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  const questionElement = users.map((item) => {
-    return item.questionaire.map((child) => {
-      return <div>{child.question}</div>;
-    });
-  });
+  function enterQuiz(id) {
+    console.log(id);
+  }
 
-  return <div>{questionElement}</div>;
+  return (
+    <section className='home-section'>
+      <div className='grid-container'>
+        <Card data={questionaires} handleClick={enterQuiz} />
+      </div>
+    </section>
+  );
 }

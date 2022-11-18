@@ -1,0 +1,21 @@
+.card {
+  min-width: 250px;
+  max-width: 650px;
+  width: 100%;
+  padding: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  h2 {
+    font-weight: 600;
+  }
+  p {
+    font-size: 1.1rem;
+  }
+  button {
+    margin-top: 1.25rem;
+    align-self: flex-start;
+    font-size: 1.1rem;
+  }
+}

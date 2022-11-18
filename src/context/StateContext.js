@@ -6,34 +6,47 @@ import {
   deleteDoc,
   updateDoc,
   doc,
+  getDoc,
 } from 'firebase/firestore';
 import firebase from './firebase_config.js';
 
 const Context = createContext();
 
 export const StateContext = ({ children }) => {
-  const userCollectionRef = collection(firebase, 'quizes');
-  const [users, setUsers] = useState([]);
+  const quizesCollectionRef = collection(firebase, 'quizes');
+  const [questionaires, setQuestionaires] = useState([]);
   const [userAddedNotification, setUserAddedNotification] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function getUsers() {
+    async function getQuizes() {
       setIsLoading(true);
-      const data = await getDocs(userCollectionRef);
+      const data = await getDocs(quizesCollectionRef);
       const dataArray = data.docs.map((user) => {
         return { id: user.id, ...user.data() };
       });
-      setUsers(dataArray);
+      setQuestionaires(dataArray);
       setIsLoading(false);
     }
-    getUsers();
+    getQuizes();
   }, [userAddedNotification]);
 
+  useEffect(() => {
+    async function getSingleQuiz() {
+      const docRef = doc(firebase, 'quizes', 'BI62HfadmVA22Zj4d9Vi');
+      const docSnap = await getDoc(docRef);
+      const docData = { id: docSnap.id, ...docSnap.data() };
+    }
+    getSingleQuiz();
+  }, []);
+
   async function createQuestionaire(questionaire) {
+    const { title, questions, category } = questionaire;
     console.log('Registering');
-    const newQuestionaire = await addDoc(userCollectionRef, {
-      questionaire,
+    const newQuestionaire = await addDoc(quizesCollectionRef, {
+      title,
+      category,
+      questions,
     });
     console.log(newQuestionaire);
 
@@ -57,7 +70,13 @@ export const StateContext = ({ children }) => {
 
   return (
     <Context.Provider
-      value={{ users, createQuestionaire, editUser, deleteUser, isLoading }}
+      value={{
+        questionaires,
+        createQuestionaire,
+        editUser,
+        deleteUser,
+        isLoading,
+      }}
     >
       {children}
     </Context.Provider>
